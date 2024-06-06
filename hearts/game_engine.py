@@ -35,8 +35,10 @@ class HeartsEngine:
         random.shuffle(cards)
         assert len(cards) % self.NUM_AGENTS == 0
 
-        # TODO
-        custom_agent_cards = [Card(Card.Suit.getShortStrSuit("H"),6), Card(Card.Suit.getShortStrSuit("D"), 14), Card(Card.Suit.getShortStrSuit("C"),12), Card(Card.Suit.getShortStrSuit("S"),2)] # read from Artur's output
+        #TODO
+        custom_agent_cards = [Card(Card.Suit.getShortStrSuit("C"), 4),
+                              Card(Card.Suit.getShortStrSuit("C"), 6),
+                              Card(Card.Suit.getShortStrSuit("C"), 8)] # read from Artur's output
         print("DETECTED CARDS:")
         for card in custom_agent_cards:
             print((card.num, card.suit))
@@ -66,7 +68,10 @@ class HeartsEngine:
         print(f"trick with start: {start_agent_id}, points: {self.agents_points}")
         in_trick = []  # (agent_id, Card)
 
-        # played = [Card(Card.Suit.getShortStrSuit("D"),3), Card(Card.Suit.getShortStrSuit("D"), 14), None] # read from Artur's output
+        #TODO
+        # played = [Card(Card.Suit.getShortStrSuit("D"), 3),
+        #           Card(Card.Suit.getShortStrSuit("D"), 14),
+        #           None] # read from Artur's output
 
 
         for offset in range(self.NUM_AGENTS):
@@ -101,18 +106,18 @@ class HeartsEngine:
     # @returns leaderboard: sorted (points, agent_id)
     def play(self, win_points):
         start_agent_id = 0
-        while True:
-            self.deal()
-            num_tricks_per_round = Card.NUM_CARDS // self.NUM_AGENTS
-            for i in range(num_tricks_per_round):
-                print(f"\n\nCalling trick for the {i}th time")
-                start_agent_id = self.trick(start_agent_id)
-                if any(map(lambda points: points >= win_points, self.agents_points)):
-                    leaderboard = sorted(
-                        [(points, i) for i, points in enumerate(self.agents_points)])
-                    for notified_agent in self.agents:
-                        notified_agent.resetSeenCards()
-                    return leaderboard
+        # while True:
+        self.deal()
+        # num_tricks_per_round = Card.NUM_CARDS // self.NUM_AGENTS
+        # for i in range(num_tricks_per_round):
+        #     print(f"\n\nCalling trick for the {i}th time")
+        start_agent_id = self.trick(start_agent_id)
+        if any(map(lambda points: points >= win_points, self.agents_points)):
+            leaderboard = sorted(
+                [(points, i) for i, points in enumerate(self.agents_points)])
+            for notified_agent in self.agents:
+                notified_agent.resetSeenCards()
+            return leaderboard
 
     @staticmethod
     def _determine_trick_winner(in_trick):

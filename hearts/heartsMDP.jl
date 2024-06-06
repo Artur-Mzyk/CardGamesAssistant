@@ -380,13 +380,12 @@ def runGame(getSeen, getNextAction, observeActionTaken, numRuns):
 
         leaderboard = engine.play(POINTS_THRESHOLD)
 
-        for p, (points, agentId) in enumerate(leaderboard):
-            if agentId == CUSTOM_AGENT_ID:
-                customAgentPlaceCount[p] += 1
-                points_history.append(points)
-                leader_deltas.append(points - leaderboard[0][0])
-        
-    print(f"Agent placing: {customAgentPlaceCount}, {points_history} {leader_deltas}")
+    #     for p, (points, agentId) in enumerate(leaderboard):
+    #         if agentId == CUSTOM_AGENT_ID:
+    #             customAgentPlaceCount[p] += 1
+    #             points_history.append(points)
+    #             leader_deltas.append(points - leaderboard[0][0])
+    # print(f"Agent placing: {customAgentPlaceCount}, {points_history} {leader_deltas}")
 """
 
 py"runGame"(getSeen, getNextAction, observeActionTaken, 1)
