@@ -10,6 +10,7 @@
         rows: 2
         cols: 2
         BoxLayout:
+            id: img_layout
             canvas:
                 Color:
                     rgba: 0, 0, 0, 1
@@ -17,16 +18,11 @@
                     rectangle: self.x, self.y, self.width, self.height
                     width: 2
             orientation: "vertical"
-            padding: 10
+            size_hint_x: main_layout.width * 0.5
             size_hint_y: main_layout.height * 0.7
-            GridLayout:
-                id: user_layout
-                rows: 1
-                cols: 1
-                Image:
-                    id: table_img
-                    allow_stretch: True
-                    keep_ratio: False
+            Image:
+                id: table_img
+                fit_mode: "fill"
         BoxLayout:
             canvas:
                 Color:
@@ -35,9 +31,29 @@
                     rectangle: self.x, self.y, self.width, self.height
                     width: 2
             orientation: "vertical"
-            padding: 10
+            size_hint_x: main_layout.width * 0.5
             size_hint_y: main_layout.height * 0.7
+        BoxLayout:
+            canvas:
+                Color:
+                    rgba: 0, 0, 0, 1
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 2
+            orientation: "vertical"
+            size_hint_x: main_layout.width * 0.5
+            size_hint_y: main_layout.height * 0.3
             GridLayout:
                 id: cards_layout
-                rows: 0
+                rows: 1
                 cols: 3
+        BoxLayout:
+            canvas:
+                Color:
+                    rgba: 0, 0, 0, 1
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+                    width: 2
+            orientation: "vertical"
+            size_hint_x: main_layout.width * 0.5
+            size_hint_y: main_layout.height * 0.3
