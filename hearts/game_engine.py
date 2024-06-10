@@ -34,14 +34,18 @@ class HeartsEngine:
         cards = [Card.createFromCardIdx(i) for i in range(Card.NUM_CARDS)]
         random.shuffle(cards)
         assert len(cards) % self.NUM_AGENTS == 0
+        custom_agent_cards = []
 
-        #TODO
-        custom_agent_cards = [Card(Card.Suit.getShortStrSuit("C"), 4),
-                              Card(Card.Suit.getShortStrSuit("C"), 6),
-                              Card(Card.Suit.getShortStrSuit("C"), 8)] # read from Artur's output
-        print("DETECTED CARDS:")
-        for card in custom_agent_cards:
-            print((card.num, card.suit))
+        f = open ('input_cards.txt', 'r')
+    
+        for line in f.readlines():
+            line = line.strip()
+            symbol, suit = line.split(",")
+            custom_agent_cards.append(Card(Card.Suit.getShortStrSuit(suit), int(symbol)))
+                              
+        # print("DETECTED CARDS:")
+        # for card in custom_agent_cards:
+        #     print((card.num, card.suit))
 
         if len(custom_agent_cards) < self.CARDS_PER_AGENT:
             needed_cards = self.CARDS_PER_AGENT - len(custom_agent_cards)
