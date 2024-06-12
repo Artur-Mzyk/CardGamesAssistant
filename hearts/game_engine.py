@@ -40,7 +40,7 @@ class HeartsEngine:
         assert len(cards) % self.NUM_AGENTS == 0
         custom_agent_cards = []
 
-        f = open ('hearts\input_cards.txt', 'r')
+        f = open('..\hearts\input_cards.txt', 'r')
     
         for line in f.readlines():
             line = line.strip()
@@ -80,7 +80,7 @@ class HeartsEngine:
         played = [None, None, None]
         i = 0
 
-        f = open ('hearts\played_cards.txt', 'r')
+        f = open('..\hearts\played_cards.txt', 'r')
     
         for line in f.readlines():
             line = line.strip()

@@ -112,6 +112,20 @@ class MenuScreen(Screen):
         table_img.source = "image.jpg"
         table_img.reload()
 
+        with open('..\hearts\input_cards.txt', 'w') as f:
+            cards = []
+
+            for card in self.cards:
+                suit = card.name_short[0]
+                symbol = card.name_short[1:len(card.name_short)]
+                name = f"{symbol},{suit}"
+
+                if name not in cards:
+                    cards.append(name)
+
+            cards = cards[:12]
+            f.write("\n".join(cards))
+
     def predict(self) -> None:
         self.cards = []
         self.img = cv2.cvtColor(cv2.imread(self.file_name), cv2.COLOR_BGR2RGB)
