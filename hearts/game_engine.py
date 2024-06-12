@@ -47,14 +47,16 @@ class HeartsEngine:
             symbol, suit = line.split(",")
             custom_agent_cards.append(Card(Card.Suit.getShortStrSuit(suit), int(symbol)))
                               
-        # print("DETECTED CARDS:")
-        # for card in custom_agent_cards:
-        #     print((card.num, card.suit))
-
         if len(custom_agent_cards) < self.CARDS_PER_AGENT:
             needed_cards = self.CARDS_PER_AGENT - len(custom_agent_cards)
             available_cards = [card for card in cards if card not in custom_agent_cards]
-            custom_agent_cards += random.sample(available_cards, needed_cards)
+            # custom_agent_cards += random.sample(available_cards, needed_cards)
+            for i in range(needed_cards):
+                custom_agent_cards.append(Card(Card.Suit.getShortStrSuit("J"), int(i+2)))
+        
+        # print("DETECTED CARDS:")
+        # for card in custom_agent_cards:
+        #     print((card.num, card.suit))
         
         available_cards = [card for card in cards if card not in custom_agent_cards]
         assert len(available_cards) >= self.CARDS_PER_AGENT * (self.NUM_AGENTS - 1)
@@ -98,7 +100,6 @@ class HeartsEngine:
                 best_card = card
             else:
                 if played[curr_agent_id] is not None:
-                    print(curr_agent_id)
                     print(played[curr_agent_id])
                     card = played[curr_agent_id]
                 else:

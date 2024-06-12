@@ -49,11 +49,26 @@ class SimpleHeartsAgent(HeartsAgent):
             self.card_map[card.suit].append(card)
 
     def getNextAction(self):
+        played = [None, None, None]
+        i = 0
+
+        f = open('..\hearts\played_cards.txt', 'r')
+    
+        for line in f.readlines():
+            line = line.strip()
+            symbol, suit = line.split(",")
+            played[i] = (Card(Card.Suit.getShortStrSuit(suit), int(symbol)))
+            i += 1
+        for card in played:
+            if card is not None:
+                self.in_play.append(card)
         # if there's a leading suit, play the last card (for efficiency) with the same suit as the leading suit.
         if len(self.in_play) > 0:
             leading_suit = self.in_play[0].suit
             if len(self.card_map[leading_suit]) > 0:
-                return self.card_map[leading_suit][-1]
+                if leading_suit == "Suit.HEARTS":
+                    return self.card_map[leading_suit][0]
+                else: return self.card_map[leading_suit][-1]
         # choose any remaining card
         for _, cards in self.card_map.items():
             if len(cards) > 0:

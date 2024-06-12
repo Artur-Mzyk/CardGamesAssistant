@@ -13,6 +13,7 @@ class Card:
         CLUBS = 1
         SPADES = 2
         HEARTS = 3
+        JOKER = 4
 
         @classmethod
         def getSuitShortStr(cls, suit):
@@ -24,6 +25,8 @@ class Card:
                 return "C"
             elif suit == cls.DIAMONDS:
                 return "D"
+            elif suit == cls.JOKER:
+                return "J"
             raise Exception(f"Unexpected suit {suit}")
 
         @classmethod
@@ -36,6 +39,8 @@ class Card:
                 return cls.CLUBS
             elif suit_str == "D":
                 return cls.DIAMONDS
+            elif suit_str == "J":
+                return cls.JOKER
             raise Exception(f"Unexpected suit_str {suit_str}")
 
     def __init__(self, suit, num):
