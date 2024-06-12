@@ -1,5 +1,9 @@
-from card import Card
-from agent import SimpleHeartsAgent
+import sys, os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from hearts.card import Card
+from hearts.agent import SimpleHeartsAgent
 
 import random
 
@@ -36,7 +40,7 @@ class HeartsEngine:
         assert len(cards) % self.NUM_AGENTS == 0
         custom_agent_cards = []
 
-        f = open ('input_cards.txt', 'r')
+        f = open ('hearts\input_cards.txt', 'r')
     
         for line in f.readlines():
             line = line.strip()
@@ -69,32 +73,42 @@ class HeartsEngine:
     """
 
     def trick(self, start_agent_id):
-        print(f"trick with start: {start_agent_id}, points: {self.agents_points}")
+        #print(f"trick with start: {start_agent_id}, points: {self.agents_points}")
         in_trick = []  # (agent_id, Card)
 
         #TODO
-        # played = [Card(Card.Suit.getShortStrSuit("D"), 3),
-        #           Card(Card.Suit.getShortStrSuit("D"), 14),
-        #           None] # read from Artur's output
+        played = [None, None, None]
+        i = 0
+
+        f = open ('hearts\played_cards.txt', 'r')
+    
+        for line in f.readlines():
+            line = line.strip()
+            symbol, suit = line.split(",")
+            played[i] = (Card(Card.Suit.getShortStrSuit(suit), int(symbol)))
+            i += 1
 
 
         for offset in range(self.NUM_AGENTS):
             curr_agent_id = (start_agent_id + offset) % self.NUM_AGENTS
             agent = self.agents[curr_agent_id]
-            card = agent.getNextAction()
-            # if curr_agent_id == 3:
-            #     card = agent.getNextAction()
-            # else:
-            #     if played[curr_agent_id] is not None:
-            #         card = played[curr_agent_id]
-            #     else:
-            #         card = agent.getNextAction()
+            # card = agent.getNextAction()
+            if curr_agent_id == 3:
+                card = agent.getNextAction()
+                best_card = card
+            else:
+                if played[curr_agent_id] is not None:
+                    print(curr_agent_id)
+                    print(played[curr_agent_id])
+                    card = played[curr_agent_id]
+                else:
+                    card = agent.getNextAction()
             
             in_trick.append((curr_agent_id, card))
             self.in_deal.append(card)
             # notify all agents of a move
-            for notified_agent in self.agents:
-                notified_agent.observeActionTaken(agent.agent_id, card)
+            # for notified_agent in self.agents:
+            #     notified_agent.observeActionTaken(agent.agent_id, card)
         # update points based on winner of trick (ignores the rule reset rule when player takes all 13 hearts and the queen of spades, for sake of reduced complexity)
         winner_agent_id = self._determine_trick_winner(in_trick)
         won_points = 0
@@ -105,7 +119,9 @@ class HeartsEngine:
         print(
             f"agent {winner_agent_id} won the trick and received {won_points} points")
         self.agents_points[winner_agent_id] += won_points
-        return winner_agent_id
+        print(
+            f"Best card: {best_card}")
+        return winner_agent_id, best_card
 
     # @returns leaderboard: sorted (points, agent_id)
     def play(self, win_points):
@@ -115,13 +131,14 @@ class HeartsEngine:
         # num_tricks_per_round = Card.NUM_CARDS // self.NUM_AGENTS
         # for i in range(num_tricks_per_round):
         #     print(f"\n\nCalling trick for the {i}th time")
-        start_agent_id = self.trick(start_agent_id)
+        start_agent_id, best_card = self.trick(start_agent_id)
         if any(map(lambda points: points >= win_points, self.agents_points)):
             leaderboard = sorted(
                 [(points, i) for i, points in enumerate(self.agents_points)])
             for notified_agent in self.agents:
                 notified_agent.resetSeenCards()
             return leaderboard
+        return best_card
 
     @staticmethod
     def _determine_trick_winner(in_trick):

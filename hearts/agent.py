@@ -1,6 +1,10 @@
+import sys, os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from abc import ABC, abstractmethod
 from collections import defaultdict
-from card import Card
+from hearts.card import Card
 
 
 class HeartsAgent(ABC):
@@ -53,7 +57,7 @@ class SimpleHeartsAgent(HeartsAgent):
         # choose any remaining card
         for _, cards in self.card_map.items():
             if len(cards) > 0:
-                return cards[-1]
+                return cards[0]
         raise RuntimeError(
             f"Agent {self.agent_id} does not have any remaining cards to play.")
 

@@ -1,11 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import sys, os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import cv2
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 import pyautogui
+
+from hearts.game_engine import *
 
 from kivy.app import App
 from kivy.lang import Builder
@@ -32,7 +38,7 @@ CLASSES = [f"{value}_of_{suit}" for suit in CARD_SUITS for value in CARD_SYMBOLS
 Builder.load_file("layout.kv")
 
 
-class Card:
+class Card2:
     def __init__(self, coords, name, name_short):
         self.coords = coords
         self.name = name
@@ -156,7 +162,7 @@ class MenuScreen(Screen):
                     self.put_text(card_name_short, x, y, w, h)
                     rect = patches.Rectangle((x, y), w, h, linewidth=1, edgecolor='g', facecolor='none')
                     ax.add_patch(rect)
-                    card = Card((x, y, w, h), card_name, card_name_short)
+                    card = Card2((x, y, w, h), card_name, card_name_short)
                     self.cards.append(card)
 
         self.display_img(ax)
@@ -221,7 +227,8 @@ class MenuScreen(Screen):
         self.display_img(ax)
 
     def run(self) -> None:
-        pass
+        engine_ = HeartsEngine.create()
+        best_card = engine_.play(50)
 
 
 class TestApp(App):
