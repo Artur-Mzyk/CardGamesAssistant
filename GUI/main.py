@@ -12,6 +12,7 @@ import numpy as np
 import pyautogui
 
 from hearts.game_engine import *
+from poker.poker import *
 
 from kivy.app import App
 from kivy.lang import Builder
@@ -293,4 +294,6 @@ class TestApp(App):
 
 
 if __name__ == "__main__":
-    TestApp().run()
+    #TestApp().run()
+    res = count_probability(["2,C", "5,S"], ["3,S", "5,H", "13,H"], 5)
+    print(res)
