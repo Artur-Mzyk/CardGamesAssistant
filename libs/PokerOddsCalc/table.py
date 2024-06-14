@@ -22,7 +22,7 @@ class Table:
         self.deck_arr = self.generate_deck(deck_type)
         self.player_hands = {player_num: Hand(hand_limit) for player_num in range(1, num_players + 1)}
         self.num_players = num_players
-        self.community_arr = np.zeros(shape=(0, 2), dtype=np.int)
+        self.community_arr = np.zeros(shape=(0, 2), dtype=np.int32)
 
     def generate_deck(self, deck_type):
 
@@ -168,8 +168,8 @@ class Table:
         return output_dict
 
     def view_result(self):
-        player_rank = np.zeros(self.num_players, dtype=np.int)
-        player_hand_type = np.zeros(self.num_players, dtype=np.int)
+        player_rank = np.zeros(self.num_players, dtype=np.int32)
+        player_hand_type = np.zeros(self.num_players, dtype=np.int32)
 
         for player in range(self.num_players):
             player_combos, player_res_arr = self.player_hands[player + 1].hand_value(self.community_arr)
@@ -213,7 +213,7 @@ class HoldemTable(Table):
         return outcome_dict
 
     def simulate_calculation(self, community_cards, undrawn_combos):
-        res_arr = np.zeros(shape=(len(undrawn_combos), self.num_players), dtype=np.int)
+        res_arr = np.zeros(shape=(len(undrawn_combos), self.num_players), dtype=np.int32)
         if self.num_players >= 2:
             Parallel(n_jobs=multiprocessing.cpu_count(), backend="threading") \
                 (delayed(self.gen_single_hand)(community_cards, player, undrawn_combos, res_arr) for player in range(self.num_players))
@@ -258,7 +258,7 @@ class OmahaTable(Table):
         return outcome_dict
 
     def simulate_calculation(self, community_cards, undrawn_combos):
-        res_arr = np.zeros(shape=(len(undrawn_combos), self.num_players), dtype=np.int)
+        res_arr = np.zeros(shape=(len(undrawn_combos), self.num_players), dtype=np.int32)
 
         if self.num_players >= 2:
             Parallel(n_jobs=multiprocessing.cpu_count(), backend="threading") \

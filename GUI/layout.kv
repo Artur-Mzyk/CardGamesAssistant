@@ -33,6 +33,13 @@
             orientation: "vertical"
             size_hint_x: main_layout.width * 0.5
             size_hint_y: main_layout.height * 0.7
+            ToggleButton:
+                id: game_type
+                text: "Hearts"
+                on_press: root.change_game()
+            TextInput:
+                id: n_players
+                text: "5"
         BoxLayout:
             canvas:
                 Color:
@@ -57,3 +64,7 @@
             orientation: "vertical"
             size_hint_x: main_layout.width * 0.5
             size_hint_y: main_layout.height * 0.3
+            Label:
+                id: result_label
+                text: ""
+                color: "black"

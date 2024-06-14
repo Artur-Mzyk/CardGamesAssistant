@@ -40,7 +40,7 @@ class Ranker:
         suit_arr = gen_suit_arr(suit_combos)
         straight_arr = gen_straight_arr(num_combos)
 
-        rank_arr = np.zeros(num_combos.shape[0], dtype=np.int)
+        rank_arr = np.zeros(num_combos.shape[0], dtype=np.int32)
 
         straight_flush_check(num_combos, rank_arr, straight_arr, suit_arr)
         four_of_a_kind_check(num_combos, rank_arr)
@@ -55,7 +55,7 @@ class Ranker:
 
 ### Helper Functions
 def gen_straight_arr(num_combos):
-    straight_check = np.zeros(len(num_combos), dtype=np.int)
+    straight_check = np.zeros(len(num_combos), dtype=np.int32)
     for i in range(4):
         if i <= 2:
             straight_check += (num_combos[:, i] == (num_combos[:, i + 1] - 1)).astype(int)

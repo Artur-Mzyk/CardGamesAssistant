@@ -3,13 +3,14 @@
 
 import sys, os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import cv2
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 import pyautogui
+import copy
 
 from hearts.game_engine import *
 from poker.poker import *
@@ -27,6 +28,7 @@ from kivy.core.window import Window
 from PIL import ImageGrab
 from ultralytics import YOLO
 from typing import List, Tuple, Union
+
 
 
 IMG_SIZE = 640
@@ -58,6 +60,8 @@ class MenuScreen(Screen):
         self.b = None
         self.mouse_coords = None
         self.snip_coords = []
+        self.cards1 = []
+        self.cards2 = []
 
     def take_screenshot(self) -> None:
         self.file_name = "screenshot.png"
@@ -113,19 +117,47 @@ class MenuScreen(Screen):
         table_img.source = "image.jpg"
         table_img.reload()
 
-        with open('..\hearts\input_cards.txt', 'w') as f:
-            cards = []
+        cards = []
 
-            for card in self.cards:
-                suit = card.name_short[0]
-                symbol = card.name_short[1:len(card.name_short)]
-                name = f"{symbol},{suit}"
+        for card in self.cards:
+            new = True
 
-                if name not in cards:
-                    cards.append(name)
+            for i in range(len(cards)):
+                if cards[i].name == card.name:
+                    x1, y1, w1, h1 = card.coords
+                    x2, y2, w2, h2 = cards[i].coords
+                    new = False
 
-            cards = cards[:12]
-            f.write("\n".join(cards))
+                    if y1 > y2:
+                        cards.pop(i)
+                        cards.append(card)
+
+            if new:
+                cards.append(card)
+
+        with open('..\hearts\input_cards.txt', 'w') as f1:
+            with open('..\hearts\played_cards.txt', 'w') as f2:
+                cards1 = []
+                cards2 = []
+                H = self.img.shape[0]
+
+                for card in cards:
+                    suit = card.name_short[0]
+                    symbol = card.name_short[1:len(card.name_short)]
+                    name = f"{symbol},{suit}"
+
+                    x, y, w, h = card.coords
+
+                    if y < H - 100:
+                        cards2.append(name)
+
+                    else:
+                        cards1.append(name)
+
+                f1.write("\n".join(cards1[:13]))
+                f2.write("\n".join(cards2[:3]))
+                self.cards1 = cards1[:2]
+                self.cards2 = cards2[:5]
 
     def predict(self) -> None:
         self.cards = []
@@ -242,8 +274,26 @@ class MenuScreen(Screen):
         self.display_img(ax)
 
     def run(self) -> None:
-        engine_ = HeartsEngine.create()
-        best_card = engine_.play(50)
+        game_type = self.ids["game_type"].text
+        print(game_type)
+
+        if game_type == "Hearts":
+            engine_ = HeartsEngine.create()
+            best_card = engine_.play(50)
+            self.ids["result_label"].text = str(best_card)
+
+        else:
+            print(self.cards1, self.cards2)
+            # if self.ids["n_players"].text != "":
+                # res = count_probability(self.cards1, self.cards2, int(self.ids["n_players"].text))
+            res = count_probability(['8,H', '6,H'], ['6,S', '7,S', '9,S', '5,S', '10,C'], 5)
+            # res = count_probability(["2,C", "5,S"], ["3,S", "5,H", "13,H"], 5)
+            print(res)
+            self.ids["result_label"].text = f"{res[0]},{res[1]}"
+
+    def change_game(self) -> None:
+        game_type = self.ids["game_type"].text
+        self.ids["game_type"].text = "Poker" if game_type == "Hearts" else "Hearts"
 
 
 class TestApp(App):
@@ -294,6 +344,4 @@ class TestApp(App):
 
 
 if __name__ == "__main__":
-    #TestApp().run()
-    res = count_probability(["2,C", "5,S"], ["3,S", "5,H", "13,H"], 5)
-    print(res)
+    TestApp().run()

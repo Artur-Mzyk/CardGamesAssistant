@@ -9,7 +9,7 @@ class Hand:
     def __init__(self, hand_limit=2):
 
         self.hand_limit = hand_limit
-        self.card_arr = np.zeros(shape=(0, hand_limit), dtype=np.int)
+        self.card_arr = np.zeros(shape=(0, hand_limit), dtype=np.int32)
 
     def add_cards(self, cards):
 
